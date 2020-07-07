@@ -50,6 +50,7 @@
                 v-model="ruleForm.password"
                 autocomplete="off"
                 placeholder="请输入密码"
+                @keydown.enter.native="submitForm('ruleForm')"
               ></el-input>
             </el-form-item>
 
@@ -64,6 +65,7 @@
                 v-model="ruleForm.password2"
                 autocomplete="off"
                 placeholder="请再次输入密码"
+                @keydown.enter.native="submitForm('ruleForm')"
               ></el-input>
             </el-form-item>
 
@@ -96,6 +98,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
     // 用户名
@@ -176,8 +179,10 @@ export default {
               if (arr.length > 0) {
                 this.$message.success("登录成功");
                 this.$router.push("/");
-                this.$refs[formName].resetFields();
-                this.$store.commit("changeIsLogin", true);
+                this.$store.commit("changeIsLogin", {
+                  isLogin: true,
+                  userInfo: arr[0],
+                });
                 return false;
               }
             }
@@ -204,6 +209,14 @@ export default {
     resetForm(formName) {
       this.status === 1 ? (this.status = 0) : (this.status = 1);
       this.$refs[formName].resetFields();
+    },
+  },
+  computed: {
+    ...mapGetters(["getUsers"]),
+  },
+  watch: {
+    getUsers(newVal) {
+      this.users = newVal;
     },
   },
 };
