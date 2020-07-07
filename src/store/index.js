@@ -10,7 +10,9 @@ export default new Vuex.Store({
     // 是否已有用户登录
     isLogin: window.localStorage.getItem("isLogin") ? JSON.parse(window.localStorage.getItem("isLogin")) : null,
     // 已登录的用户信息
-    userInfo_login: window.localStorage.getItem("userInfo_login") ? JSON.parse(window.localStorage.getItem("userInfo_login")) : null
+    userInfo_login: window.localStorage.getItem("userInfo_login") ? JSON.parse(window.localStorage.getItem("userInfo_login")) : null,
+    // 获取所有用户的笔记、笔记本等数据
+    usersNotes: window.localStorage.getItem("usersNotes") ? JSON.parse(window.localStorage.getItem("usersNotes")) : null,
   },
   getters: {
     // 获取所有用户
@@ -24,6 +26,10 @@ export default new Vuex.Store({
     //  获取已登录的用户信息
     getUserInfoLogin(state) {
       return state.userInfo_login;
+    },
+    // 获取所有用户的笔记、笔记本等数据
+    getUsersNotes(state) {
+      return state.usersNotes;
     }
   },
   mutations: {
@@ -50,6 +56,12 @@ export default new Vuex.Store({
       state.userInfo_login = data.userInfo;
       window.localStorage.setItem("userInfo_login", JSON.stringify(data.userInfo));
     },
+
+    // 更新用户的笔记数据
+    upadteUsersNotes(state, data) {
+      state.usersNotes = data;
+      window.localStorage.setItem("usersNotes", JSON.stringify(data));
+    }
   },
   actions: {}
 });

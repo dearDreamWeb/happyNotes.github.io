@@ -43,7 +43,7 @@
 
       <!-- 右侧内容区 -->
       <el-main>
-        <router-view />
+        <router-view :userData="userData" @updateUserData="updateUserData" />
       </el-main>
     </el-container>
   </div>
@@ -56,7 +56,9 @@ export default {
   name: "Home",
   data() {
     return {
-      userInfo_login: this.$store.getters.getUserInfoLogin,
+      userInfo_login: this.$store.getters.getUserInfoLogin, // 登录用户的个人信息
+      usersNotes: this.$store.getters.getUsersNotes, // 所有用户的笔记数据
+      userData: [],
       // 导航列表信息
       navList: [
         {
@@ -90,17 +92,39 @@ export default {
       this.$router.push("/login");
       this.$message.success("退出登录成功");
     },
+
+    /**
+     * 筛选出登录用户的笔记数据
+     */
+    initUserData() {
+      let userId = this.userInfo_login.userId;
+      if (this.usersNotes && this.usersNotes[userId]) {
+        this.userData = this.usersNotes[userId];
+      }
+    },
+
+    /**
+     * 通过子组件传值更新userData
+     */
+    updateUserData(data) {
+      this.userData = data;
+      this.$store.commit("upadteUsersNotes", {
+        ...this.usersNotes,
+        [this.userInfo_login.userId]: this.userData,
+      });
+    },
   },
   computed: {
-    ...mapGetters(["getUserInfoLogin"]),
+    ...mapGetters(["getUserInfoLogin", "getUsersNotes"]),
   },
   watch: {
     getUserInfoLogin(newVal) {
       this.userInfo_login = newVal;
     },
-  },
-  mounted() {
-    console.log(this.$route);
+    getUsersNotes(newVal) {
+      this.usersNotes = newVal;
+      this.initUserData();
+    },
   },
   // 如果没有用户登录就跳转到登录界面
   beforeRouteEnter(to, from, next) {
@@ -110,6 +134,9 @@ export default {
         return false;
       }
     });
+  },
+  mounted() {
+    this.initUserData();
   },
 };
 </script>
