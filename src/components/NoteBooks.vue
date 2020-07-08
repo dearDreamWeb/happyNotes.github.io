@@ -1,6 +1,6 @@
 <template>
   <div class="noteBooks">
-    <el-button type="success" size="mini" @click="open">
+    <el-button type="success" size="mini" class="created_btn" @click="open">
       <i class="el-icon-plus" /> 新建笔记本
     </el-button>
     <el-divider />
@@ -11,10 +11,18 @@
         </el-col>
         <el-col v-else :span="16" :offset="4">
           <h1 class="title">笔记本列表({{ userData.length }})</h1>
+
           <div
             class="noteBooks_item"
             v-for="(item, index) in userData"
             :key="index"
+            @click.stop="
+              /**
+               * 点击笔记本跳转到笔记页面
+               * 形参的index代表在userData数组的下标值，说明是要跳转到该项中笔记本
+               */
+              $router.push({ name: 'note', params: { selectValue: index } })
+            "
           >
             <div class="noteBooks_item_left">
               <i class="el-icon-s-management icon"></i>
@@ -23,8 +31,8 @@
             </div>
             <div class="noteBooks_item_right">
               <span class="time">{{ item.createdTime | changeDate }}</span>
-              <span class="delete">删除</span>
-              <span class="edit" @click="editNoteBook(item.noteBookName)"
+              <span class="delete" @click.stop="">删除</span>
+              <span class="edit" @click.stop="editNoteBook(item.noteBookName)"
                 >编辑</span
               >
             </div>
@@ -45,9 +53,6 @@ export default {
       required: true,
       type: Array,
     },
-  },
-  data() {
-    return {};
   },
   methods: {
     // 新建笔记本
@@ -128,7 +133,6 @@ export default {
   filters: {
     //   格式化时间格式
     changeDate(value) {
-      console.log(value);
       let nowDate = new Date().getTime();
       let timeValue = nowDate - value; // 时间差的毫秒数
       // 接下来分别把时间差的毫秒数转换成年、月、天、小时、分钟、秒
@@ -158,6 +162,10 @@ export default {
 
 <style lang="scss" scoped>
 .noteBooks {
+  .created_btn {
+    margin: 10px 0 0 10px;
+  }
+
   // 修改element-ui中分割线el-divider的margin值
   .el-divider--horizontal {
     margin: 12px 0;

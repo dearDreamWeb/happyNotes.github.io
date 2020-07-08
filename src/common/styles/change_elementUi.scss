@@ -1,0 +1,26 @@
+// 下拉框的输入框的样式
+.el-select {
+  .el-input__inner {
+    width: 130px;
+    text-align: center;
+    background-color: #f8f8f8;
+    border: none;
+    font-size: 20px;
+  }
+}
+
+// 下拉框旁边的箭头
+.el-select .el-input .el-select__caret {
+  color: #000;
+}
+// 下拉选择区域样式
+.el-select-dropdown {
+  width: 150px !important;
+  .popper__arrow {
+    left: 75px !important;
+  }
+}
+
+.el-main {
+  padding: 0;
+}

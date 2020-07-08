@@ -1,9 +1,10 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
-import Login from "../views/Login.vue";
-import NoteBooks from "../components/NoteBooks.vue";
-
+const Home = () => import("@/views/Home.vue");
+const Login = () => import("@/views/Login.vue");
+const NoteBooks = () => import("@/components/NoteBooks");
+const Notes = () => import("@/components/Notes");
+const RecycleBin = () => import("@/components/RecycleBin");
 Vue.use(VueRouter);
 
 const routes = [
@@ -13,16 +14,19 @@ const routes = [
     component: Home,
     children: [
       {
-        path: "/note",
+        path: "note",
+        name: "note",
+        component: Notes
+      },
+      {
+        path: "notebooks",
+        name: "notebooks",
         component: NoteBooks
       },
       {
-        path: "/notebooks",
-        component: NoteBooks
-      },
-      {
-        path: "/recyclebin",
-        component: NoteBooks
+        path: "recyclebin",
+        name: "recyclebin",
+        component: RecycleBin
       },
     ]
   },
