@@ -27,20 +27,37 @@
         <!-- 笔记列表 -->
         <!-- 由于userData是props值，props是异步的，所以当页面加载时props值没有加载过来，先不显示，等到mounted是再加载 -->
         <section class="lists_main" v-if="showList">
-          <el-row
+          <div
             v-for="(item, index) in userData[selectValue].lists"
             :key="index"
-            :class="['lists_item', { checked: selectedNote === index }]"
-            @click.stop.native="selectedNoteData(item, index)"
           >
-            <el-col :span="12">{{ item.createdTime | changeDate }}</el-col>
-            <el-col :span="12">{{ item.title }}</el-col>
-          </el-row>
+            <el-row
+              v-if="item.show"
+              :class="['lists_item', { checked: selectedNote === index }]"
+              @click.stop.native="selectedNoteData(item, index)"
+            >
+              <!-- 创建时间 -->
+              <el-col :span="12">{{ item.createdTime | changeDate }}</el-col>
+              <!-- 文章标题  当长度大于10时，title显示全部的标题，否则不开启title功能 -->
+              <el-col
+                :span="12"
+                :title="item.title.length > 8 ? item.title : false"
+              >
+                <!-- 当长度大于10的时候，显示前十个字加上...  否则显示全称 -->
+                {{
+                  item.title.length > 8
+                    ? item.title.slice(0, 8) + "..."
+                    : item.title
+                }}
+              </el-col>
+            </el-row>
+          </div>
         </section>
       </el-aside>
 
       <!-- 笔记内容部分 -->
       <el-main class="note_main" v-if="noteData">
+        <!-- 头部 -->
         <header class="noteMain_header">
           <el-row>
             <el-col :span="12">
@@ -49,18 +66,31 @@
                   .toLocaleString()
                   .replace(/\//g, "-")
               }}
-              已保存
+              {{ saveStatus }}
             </el-col>
+            <!-- 删除 -->
             <el-col :span="1" :offset="11">
-              <i class="el-icon-delete icon"></i>
+              <!-- 确认框，onConfirm是点击确认选择的回调事件 -->
+              <el-popconfirm
+                confirmButtonText="确定"
+                cancelButtonText="取消"
+                icon="el-icon-info"
+                iconColor="red"
+                title="确定删除该笔记吗？"
+                @onConfirm="deleteNote"
+              >
+                <i slot="reference" class="el-icon-delete icon"></i>
+              </el-popconfirm>
             </el-col>
           </el-row>
         </header>
+        <!-- 标题和内容区 -->
         <section class="note_title">
           <input
             class="input"
             v-model="noteTitle"
             placeholder="请输入文章标题"
+            @input="changeNoteData('title', noteTitle)"
           />
         </section>
         <section class="note_content">
@@ -68,6 +98,7 @@
             class="textarea"
             v-model="noteCotent"
             placeholder="请输入文章内容"
+            @input="changeNoteData('content', noteCotent)"
           />
         </section>
       </el-main>
@@ -92,6 +123,8 @@ export default {
       noteCotent: "", //文章内容
       noteData: null, // 文章的数据
       selectedNote: 0, //选中的文章在文章数组中的下标值
+      saveStatus: "已保存", //文章编辑时保存的状态，分为已保存和保存中
+      timer: null, //防抖定时器
     };
   },
   methods: {
@@ -101,12 +134,15 @@ export default {
       this.selectValue = this.$route.params.selectValue
         ? this.$route.params.selectValue
         : 0;
+      // 不是从笔记本跳转过来的，正常加载
       this.userData.forEach((item, index) => {
         let data = {
           value: index,
           label: item.noteBookName,
         };
         this.options = [...this.options, data];
+        // 当checked为true说明上次浏览的就是该笔记本
+        if (item.checked === true) this.selectValue = index;
       });
     },
 
@@ -146,12 +182,66 @@ export default {
       this.noteData = item;
       this.selectedNote = index;
     },
+
+    /**
+     * 输入框更新标题或文章内容
+     * 用了防抖的思想
+     * @params type 是判断更新的是标题还是内容, 分为title,content;  text是更新的内容
+     */
+    changeNoteData(type, text) {
+      this.saveStatus = "保存中";
+      // 设置文章标题字数最多为20
+      if (type === "title" && text.length > 20) {
+        this.$message.warning("文章标题不能超过20个字数");
+        this.noteTitle = text.slice(0, 20);
+        return false;
+      } else {
+        if (type === "title" && text.length === 0) {
+          text = "无标题";
+        }
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => {
+          console.log(type, text);
+          this.userData[this.selectValue].lists[this.selectedNote][type] = text;
+          let newUserData = this.userData;
+          this.$emit("updateUserData", newUserData);
+          this.saveStatus = "已保存";
+        }, 1000);
+      }
+    },
+
+    /**
+     * 删除笔记
+     * 将 笔记数据中的show改为false，就不会显示该笔记了
+     */
+    deleteNote() {
+      this.userData[this.selectValue].lists[this.selectedNote].show = false;
+      let newUserData = this.userData;
+      this.$emit("updateUserData", newUserData);
+      this.selectedNoteData(this.userData[this.selectValue].lists[0], 0);
+      this.$message.success("笔记删除成功");
+    },
   },
   watch: {
     // 当noteData更新时，把noteTitle和noteContent也更新
     noteData() {
-      this.noteTitle = this.noteData.title;
-      this.noteCotent = this.noteData.content;
+      this.noteTitle = this.noteData ? this.noteData.title : "";
+      this.noteCotent = this.noteData ? this.noteData.content : "";
+    },
+    // 当selectValue更新时
+    selectValue() {
+      // noteData更新一下
+      let noteLists = this.userData[this.selectValue].lists;
+      if (noteLists.length === 0) {
+        this.noteData = null;
+      }
+
+      // 更新userData中的selectValue
+      this.userData.forEach((item, index) => {
+        item.checked = this.selectValue === index ? true : false;
+      });
+      let newUserData = this.userData;
+      this.$emit("updateUserData", newUserData);
     },
   },
   mounted() {
@@ -239,7 +329,7 @@ export default {
         }
         &:hover {
           cursor: pointer;
-          background-color: #bbffaa;
+          background-color: #ffffff;
         }
       }
       .checked {
@@ -258,12 +348,14 @@ export default {
         font-size: 16px;
         &:hover {
           cursor: pointer;
+          color: #eb1212;
         }
       }
     }
     .note_title {
       padding: 10px 20px;
       .input {
+        width: 100%;
         height: 30px;
         font-size: 20px;
         &:focus {

@@ -96,6 +96,7 @@ export default {
       let obj = {
         noteBookName: value,
         createdTime: new Date().getTime(),
+        checked: false,
         lists: [],
       };
       let newUserData = [obj, ...this.userData];

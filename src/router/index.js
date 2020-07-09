@@ -12,6 +12,7 @@ const routes = [
     path: "/",
     name: "home",
     component: Home,
+    redirect: "/notebooks",
     children: [
       {
         path: "note",
