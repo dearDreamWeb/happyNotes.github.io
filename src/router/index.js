@@ -29,7 +29,7 @@ const routes = [
         path: "recyclebin",
         name: "recyclebin",
         component: RecycleBin
-      },
+      }
     ]
   },
   {

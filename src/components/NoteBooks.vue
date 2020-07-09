@@ -55,8 +55,8 @@ export default {
   props: {
     userData: {
       required: true,
-      type: Array,
-    },
+      type: Array
+    }
   },
   methods: {
     // 新建笔记本
@@ -66,7 +66,7 @@ export default {
         cancelButtonText: "取消",
         inputPattern: /^[^\s]{1,20}$/, // 正则判断为false才会出现提醒消息，正则判断不为空，且最大长度为20
         inputErrorMessage: "内容不能为空或有空格，最大长度为20",
-        inputPlaceholder: "请输入笔记本名称",
+        inputPlaceholder: "请输入笔记本名称"
       })
         .then(({ value }) => {
           //  判断userData是否为空，不为空就判断是否存在该笔记本，存在就提示不能创建，不存在就存入userData里
@@ -88,7 +88,7 @@ export default {
         .catch(() => {
           this.$message({
             type: "info",
-            message: "取消输入",
+            message: "取消输入"
           });
         });
     },
@@ -101,7 +101,7 @@ export default {
         noteBookName: value,
         createdTime: new Date().getTime(),
         checked: false,
-        lists: [],
+        lists: []
       };
       let newUserData = [obj, ...this.userData];
       this.$emit("updateUserData", newUserData);
@@ -117,7 +117,7 @@ export default {
         cancelButtonText: "取消",
         inputValue: noteBookName,
         inputPattern: /^[^\s]{1,20}$/, // 正则判断为false才会出现提醒消息，正则判断不为空，且最大长度为20
-        inputErrorMessage: "内容不能为空或有空格，最大长度为20",
+        inputErrorMessage: "内容不能为空或有空格，最大长度为20"
       })
         .then(({ value }) => {
           let newArr = this.userData.map(item => {
@@ -130,7 +130,7 @@ export default {
         .catch(() => {
           this.$message({
             type: "info",
-            message: "取消输入",
+            message: "取消输入"
           });
         });
     },
@@ -147,7 +147,7 @@ export default {
         this.$emit("updateUserData", newUserData);
         this.$message.success("笔记本删除成功");
       }
-    },
+    }
   },
   filters: {
     //   格式化时间格式
@@ -174,8 +174,8 @@ export default {
         }
       });
       return `${arr[index]}${arr1[index]}`;
-    },
-  },
+    }
+  }
 };
 </script>
 

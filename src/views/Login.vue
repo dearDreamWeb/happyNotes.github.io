@@ -148,19 +148,19 @@ export default {
       ruleForm: {
         userName: "",
         password: "",
-        password2: "",
+        password2: ""
       },
       rules: {
         userName: [{ validator: validateUserName, trigger: "blur" }],
         password: [{ validator: validatePassword, trigger: "blur" }],
-        password2: [{ validator: validatePassword2, trigger: "blur" }],
+        password2: [{ validator: validatePassword2, trigger: "blur" }]
       },
       error: {
         errorUserName: "",
-        errorPassword: "",
+        errorPassword: ""
       },
       status: 1, //1代表登录，0代表创建账号
-      users: this.$store.getters.getUsers,
+      users: this.$store.getters.getUsers
     };
   },
   methods: {
@@ -181,7 +181,7 @@ export default {
                 this.$router.push("/");
                 this.$store.commit("changeIsLogin", {
                   isLogin: true,
-                  userInfo: arr[0],
+                  userInfo: arr[0]
                 });
                 return false;
               }
@@ -193,7 +193,7 @@ export default {
             this.$store.commit("setUser", {
               userId: new Date().getTime(),
               userName: this.ruleForm.userName,
-              password: this.ruleForm.password,
+              password: this.ruleForm.password
             });
             this.$message.success("创建账号成功");
             this.$refs[formName].resetFields();
@@ -209,15 +209,15 @@ export default {
     resetForm(formName) {
       this.status === 1 ? (this.status = 0) : (this.status = 1);
       this.$refs[formName].resetFields();
-    },
+    }
   },
   computed: {
-    ...mapGetters(["getUsers"]),
+    ...mapGetters(["getUsers"])
   },
   watch: {
     getUsers(newVal) {
       this.users = newVal;
-    },
+    }
   },
   /**
    * 用户已登录，禁止访问该页面
@@ -229,7 +229,7 @@ export default {
         vm.$router.push("/");
       }
     });
-  },
+  }
 };
 </script>
 

@@ -97,12 +97,12 @@ export default {
   props: {
     userData: {
       type: Array,
-      required: true,
+      required: true
     },
     recycleBinData: {
       type: Array,
-      required: true,
-    },
+      required: true
+    }
   },
   data() {
     return {
@@ -110,7 +110,7 @@ export default {
       noteTitle: "", //文章标题
       noteCotent: "", //文章内容
       noteData: null, // 文章的数据
-      selectedNote: 0, //选中的文章在文章数组中的下标值
+      selectedNote: 0 //选中的文章在文章数组中的下标值
     };
   },
   methods: {
@@ -200,14 +200,14 @@ export default {
         this.selectedNoteData({ noteData: null }, 0);
       }
       this.$message.success("笔记恢复成功");
-    },
+    }
   },
   watch: {
     // 当noteData更新时，把noteTitle和noteContent也更新
     noteData() {
       this.noteTitle = this.noteData ? this.noteData.title : "";
       this.noteCotent = this.noteData ? this.noteData.content : "";
-    },
+    }
   },
   mounted() {
     this.showList = true; //列表显示
@@ -240,8 +240,8 @@ export default {
         }
       });
       return `${arr[index]}${arr1[index]}`;
-    },
-  },
+    }
+  }
 };
 </script>
 

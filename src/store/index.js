@@ -6,15 +6,25 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     // 获取所有用户
-    users: window.localStorage.getItem("users") ? JSON.parse(window.localStorage.getItem("users")) : null,
+    users: window.localStorage.getItem("users")
+      ? JSON.parse(window.localStorage.getItem("users"))
+      : null,
     // 是否已有用户登录
-    isLogin: window.localStorage.getItem("isLogin") ? JSON.parse(window.localStorage.getItem("isLogin")) : null,
+    isLogin: window.localStorage.getItem("isLogin")
+      ? JSON.parse(window.localStorage.getItem("isLogin"))
+      : null,
     // 已登录的用户信息
-    userInfo_login: window.localStorage.getItem("userInfo_login") ? JSON.parse(window.localStorage.getItem("userInfo_login")) : null,
+    userInfo_login: window.localStorage.getItem("userInfo_login")
+      ? JSON.parse(window.localStorage.getItem("userInfo_login"))
+      : null,
     // 获取所有用户的笔记、笔记本等数据
-    usersNotes: window.localStorage.getItem("usersNotes") ? JSON.parse(window.localStorage.getItem("usersNotes")) : null,
+    usersNotes: window.localStorage.getItem("usersNotes")
+      ? JSON.parse(window.localStorage.getItem("usersNotes"))
+      : null,
     // 获取回收站里所有用户的笔记、笔记本等数据
-    recycleBinNotes: window.localStorage.getItem("recycleBinNotes") ? JSON.parse(window.localStorage.getItem("recycleBinNotes")) : null,
+    recycleBinNotes: window.localStorage.getItem("recycleBinNotes")
+      ? JSON.parse(window.localStorage.getItem("recycleBinNotes"))
+      : null
   },
   getters: {
     // 获取所有用户
@@ -60,7 +70,10 @@ export default new Vuex.Store({
 
       // 修改登录用户的信息
       state.userInfo_login = data.userInfo;
-      window.localStorage.setItem("userInfo_login", JSON.stringify(data.userInfo));
+      window.localStorage.setItem(
+        "userInfo_login",
+        JSON.stringify(data.userInfo)
+      );
     },
 
     // 更新用户的笔记数据

@@ -111,12 +111,12 @@ export default {
   props: {
     userData: {
       type: Array,
-      required: true,
+      required: true
     },
     recycleBinData: {
       type: Array,
-      required: true,
-    },
+      required: true
+    }
   },
   data() {
     return {
@@ -128,7 +128,7 @@ export default {
       noteData: null, // 文章的数据
       selectedNote: 0, //选中的文章在文章数组中的下标值
       saveStatus: "已保存", //文章编辑时保存的状态，分为已保存和保存中
-      timer: null, //防抖定时器
+      timer: null //防抖定时器
     };
   },
   methods: {
@@ -153,7 +153,7 @@ export default {
       this.userData.forEach((item, index) => {
         let data = {
           value: index,
-          label: item.noteBookName,
+          label: item.noteBookName
         };
         this.options = [...this.options, data];
         // 当checked为true说明上次浏览的就是该笔记本
@@ -180,11 +180,11 @@ export default {
         createdTime: new Date().getTime(),
         title: "无标题",
         content: "",
-        show: true,
+        show: true
       };
       this.userData[this.selectValue].lists = [
         newNote,
-        ...this.userData[this.selectValue].lists,
+        ...this.userData[this.selectValue].lists
       ];
       let newUserData = this.userData;
       this.$emit("updateUserData", newUserData);
@@ -266,7 +266,7 @@ export default {
         this.selectedNoteData(null, 0);
       }
       this.$message.success("笔记删除成功");
-    },
+    }
   },
   watch: {
     // 当noteData更新时，把noteTitle和noteContent也更新
@@ -288,7 +288,7 @@ export default {
       });
       let newUserData = this.userData;
       this.$emit("updateUserData", newUserData);
-    },
+    }
   },
   mounted() {
     this.showList = true; //列表显示
@@ -332,8 +332,8 @@ export default {
         }
       });
       return `${arr[index]}${arr1[index]}`;
-    },
-  },
+    }
+  }
 };
 </script>
 

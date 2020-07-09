@@ -29,7 +29,7 @@
               :class="[
                 item.icon,
                 'icon',
-                { checked: $route.path === item.path },
+                { checked: $route.path === item.path }
               ]"
               @click="$router.push(item.path)"
             ></i>
@@ -72,19 +72,19 @@ export default {
         {
           path: "/note",
           icon: "el-icon-s-order",
-          content: "笔记",
+          content: "笔记"
         },
         {
           path: "/notebooks",
           icon: "el-icon-s-management",
-          content: "笔记本",
+          content: "笔记本"
         },
         {
           path: "/recyclebin",
           icon: "el-icon-delete-solid",
-          content: "回收站",
-        },
-      ],
+          content: "回收站"
+        }
+      ]
     };
   },
   methods: {
@@ -95,7 +95,7 @@ export default {
       // 通过vuex修改isLogin为false，userInfo_login为null
       this.$store.commit("changeIsLogin", {
         isLogin: false,
-        userInfo: null,
+        userInfo: null
       });
       this.$router.push("/login");
       this.$message.success("退出登录成功");
@@ -128,7 +128,7 @@ export default {
       this.userData = data;
       this.$store.commit("upadteUsersNotes", {
         ...this.usersNotes,
-        [this.userInfo_login.userId]: this.userData,
+        [this.userInfo_login.userId]: this.userData
       });
     },
 
@@ -139,12 +139,12 @@ export default {
       this.recycleBinData = data;
       this.$store.commit("upadteRecycleBinNotes", {
         ...this.recycleBinNotes,
-        [this.userInfo_login.userId]: this.recycleBinData,
+        [this.userInfo_login.userId]: this.recycleBinData
       });
-    },
+    }
   },
   computed: {
-    ...mapGetters(["getUserInfoLogin", "getUsersNotes"]),
+    ...mapGetters(["getUserInfoLogin", "getUsersNotes"])
   },
   watch: {
     getUserInfoLogin(newVal) {
@@ -157,7 +157,7 @@ export default {
     getRecycleBinNotes(newVal) {
       this.recycleBinNotes = newVal;
       this.initRecycleBinData();
-    },
+    }
   },
   // 如果没有用户登录就跳转到登录界面
   beforeRouteEnter(to, from, next) {
@@ -171,7 +171,7 @@ export default {
   mounted() {
     this.initUserData();
     this.initRecycleBinData();
-  },
+  }
 };
 </script>
 
