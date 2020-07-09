@@ -43,7 +43,12 @@
 
       <!-- 右侧内容区 -->
       <el-main>
-        <router-view :userData="userData" @updateUserData="updateUserData" />
+        <router-view
+          :userData="userData"
+          :recycleBinData="recycleBinData"
+          @updateUserData="updateUserData"
+          @updateRecycleBinData="updateRecycleBinData"
+        />
       </el-main>
     </el-container>
   </div>
@@ -58,7 +63,9 @@ export default {
     return {
       userInfo_login: this.$store.getters.getUserInfoLogin, // 登录用户的个人信息
       usersNotes: this.$store.getters.getUsersNotes, // 所有用户的笔记数据
-      userData: [],
+      recycleBinNotes: this.$store.getters.getRecycleBinNotes, // 回收站里所有用户的笔记数据
+      userData: [], //该用户的笔记，笔记本数据
+      recycleBinData: [], //该用户回收站的数据
       // 导航列表信息
       navList: [
         {
@@ -104,6 +111,16 @@ export default {
     },
 
     /**
+     * 筛选出回收站里该用户的笔记数据
+     */
+    initRecycleBinData() {
+      let userId = this.userInfo_login.userId;
+      if (this.recycleBinNotes && this.recycleBinNotes[userId]) {
+        this.recycleBinData = this.recycleBinNotes[userId];
+      }
+    },
+
+    /**
      * 通过子组件传值更新userData
      */
     updateUserData(data) {
@@ -111,6 +128,17 @@ export default {
       this.$store.commit("upadteUsersNotes", {
         ...this.usersNotes,
         [this.userInfo_login.userId]: this.userData,
+      });
+    },
+
+    /**
+     * 通过子组件传值更新recycleBinData
+     */
+    updateRecycleBinData(data) {
+      this.recycleBinData = data;
+      this.$store.commit("upadteRecycleBinNotes", {
+        ...this.recycleBinNotes,
+        [this.userInfo_login.userId]: this.recycleBinData,
       });
     },
   },
@@ -125,6 +153,10 @@ export default {
       this.usersNotes = newVal;
       this.initUserData();
     },
+    getRecycleBinNotes(newVal) {
+      this.recycleBinNotes = newVal;
+      this.initRecycleBinData();
+    },
   },
   // 如果没有用户登录就跳转到登录界面
   beforeRouteEnter(to, from, next) {
@@ -137,6 +169,7 @@ export default {
   },
   mounted() {
     this.initUserData();
+    this.initRecycleBinData();
   },
 };
 </script>

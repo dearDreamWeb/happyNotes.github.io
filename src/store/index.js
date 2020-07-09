@@ -13,6 +13,8 @@ export default new Vuex.Store({
     userInfo_login: window.localStorage.getItem("userInfo_login") ? JSON.parse(window.localStorage.getItem("userInfo_login")) : null,
     // 获取所有用户的笔记、笔记本等数据
     usersNotes: window.localStorage.getItem("usersNotes") ? JSON.parse(window.localStorage.getItem("usersNotes")) : null,
+    // 获取回收站里所有用户的笔记、笔记本等数据
+    recycleBinNotes: window.localStorage.getItem("recycleBinNotes") ? JSON.parse(window.localStorage.getItem("recycleBinNotes")) : null,
   },
   getters: {
     // 获取所有用户
@@ -30,6 +32,10 @@ export default new Vuex.Store({
     // 获取所有用户的笔记、笔记本等数据
     getUsersNotes(state) {
       return state.usersNotes;
+    },
+    // 获取回收站里所有用户的笔记、笔记本等数据
+    getRecycleBinNotes(state) {
+      return state.recycleBinNotes;
     }
   },
   mutations: {
@@ -51,7 +57,7 @@ export default new Vuex.Store({
       // 设置isLogin为true
       state.isLogin = data.isLogin;
       window.localStorage.setItem("isLogin", JSON.stringify(data.isLogin));
-      console.log(data)
+
       // 修改登录用户的信息
       state.userInfo_login = data.userInfo;
       window.localStorage.setItem("userInfo_login", JSON.stringify(data.userInfo));
@@ -61,6 +67,12 @@ export default new Vuex.Store({
     upadteUsersNotes(state, data) {
       state.usersNotes = data;
       window.localStorage.setItem("usersNotes", JSON.stringify(data));
+    },
+
+    // 更新回收站里用户的笔记数据
+    upadteRecycleBinNotes(state, data) {
+      state.recycleBinNotes = data;
+      window.localStorage.setItem("recycleBinNotes", JSON.stringify(data));
     }
   },
   actions: {}

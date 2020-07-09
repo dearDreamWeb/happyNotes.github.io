@@ -31,7 +31,11 @@
             </div>
             <div class="noteBooks_item_right">
               <span class="time">{{ item.createdTime | changeDate }}</span>
-              <span class="delete" @click.stop="">删除</span>
+              <span
+                class="delete"
+                @click.stop="deleteNoteBook(item.lists.length, index)"
+                >删除</span
+              >
               <span class="edit" @click.stop="editNoteBook(item.noteBookName)"
                 >编辑</span
               >
@@ -129,6 +133,20 @@ export default {
             message: "取消输入",
           });
         });
+    },
+
+    /**
+     * 删除笔记本
+     */
+    deleteNoteBook(num, index) {
+      if (num > 0) {
+        this.$message.info("请先把该笔记本中的所有笔记彻底删除");
+      } else {
+        let newUserData = this.userData;
+        newUserData.splice(index, 1);
+        this.$emit("updateUserData", newUserData);
+        this.$message.success("笔记本删除成功");
+      }
     },
   },
   filters: {

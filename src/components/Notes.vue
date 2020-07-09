@@ -113,6 +113,10 @@ export default {
       type: Array,
       required: true,
     },
+    recycleBinData: {
+      type: Array,
+      required: true,
+    },
   },
   data() {
     return {
@@ -131,9 +135,20 @@ export default {
     // 初始化下拉框的选项
     initOptions() {
       // 如果是从笔记本页面跳转过来的，获取路由传过来的值，不是从页面传过来的就为0
-      this.selectValue = this.$route.params.selectValue
-        ? this.$route.params.selectValue
-        : 0;
+      if (this.$route.params.selectValue) {
+        this.selectValue = this.$route.params.selectValue;
+        // 更新userData中的selectValue
+        this.userData.forEach((item, index) => {
+          item.checked =
+            this.$route.params.selectValue === index ? true : false;
+        });
+      } else {
+        this.selectValue = 0;
+      }
+
+      let newUserData = this.userData;
+      this.$emit("updateUserData", newUserData);
+
       // 不是从笔记本跳转过来的，正常加载
       this.userData.forEach((item, index) => {
         let data = {
@@ -173,6 +188,7 @@ export default {
       ];
       let newUserData = this.userData;
       this.$emit("updateUserData", newUserData);
+      this.noteData = this.userData[this.selectValue].lists[0];
     },
 
     /**
@@ -201,12 +217,11 @@ export default {
         }
         clearTimeout(this.timer);
         this.timer = setTimeout(() => {
-          console.log(type, text);
           this.userData[this.selectValue].lists[this.selectedNote][type] = text;
           let newUserData = this.userData;
           this.$emit("updateUserData", newUserData);
           this.saveStatus = "已保存";
-        }, 1000);
+        }, 300);
       }
     },
 
@@ -215,10 +230,41 @@ export default {
      * 将 笔记数据中的show改为false，就不会显示该笔记了
      */
     deleteNote() {
+      // 更新userData数据
       this.userData[this.selectValue].lists[this.selectedNote].show = false;
       let newUserData = this.userData;
       this.$emit("updateUserData", newUserData);
-      this.selectedNoteData(this.userData[this.selectValue].lists[0], 0);
+
+      // 更新recycleBinData数据
+      let category = this.userData[this.selectValue].noteBookName; //该笔记的属于的哪个笔记本，也可以说是上级分类
+      let noteData = this.userData[this.selectValue].lists[this.selectedNote]; // 该笔记的数据
+      let deleteTime = new Date().getTime(); // 删除日期
+      let allNoteData = { deleteTime, category, noteData }; // 要到回收站的笔记的整体信息
+      let newRecycleBinData = [allNoteData, ...this.recycleBinData];
+      this.$emit("updateRecycleBinData", newRecycleBinData);
+
+      // 删除该笔记了，把选中的笔记变成第一个,如果删除最后一个的话，第一个参数传null
+      let showListsLength = 0; // 未删除的笔记数
+      // 遍历得到未删除笔记的总数
+      this.userData[this.selectValue].lists.forEach(item => {
+        if (item.show === true) showListsLength++;
+      });
+      // 如果showListLength大于0，说明还有未删除的笔记，遍历找到第一个未删除的笔记即可，传值初始化noteData和selectValue；
+      // 小于0说明该笔记本下所有笔记都删除了，初始化noteData为null
+      if (showListsLength > 0) {
+        let flag = true;
+        this.userData[this.selectValue].lists.forEach((item, index) => {
+          if (item.show === true && flag) {
+            flag = false;
+            this.selectedNoteData(
+              this.userData[this.selectValue].lists[index],
+              index
+            );
+          }
+        });
+      } else {
+        this.selectedNoteData(null, 0);
+      }
       this.$message.success("笔记删除成功");
     },
   },
