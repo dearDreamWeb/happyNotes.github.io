@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 const Home = () => import("@/views/Home.vue");
 const Login = () => import("@/views/Login.vue");
+const NotFind = () => import("@/views/NotFind.vue");
 const NoteBooks = () => import("@/components/NoteBooks");
 const Notes = () => import("@/components/Notes");
 const RecycleBin = () => import("@/components/RecycleBin");
@@ -35,6 +36,11 @@ const routes = [
     path: "/login",
     name: "login",
     component: Login
+  },
+  {
+    path: "*",
+    name: "notFind",
+    component: NotFind
   }
 ];
 

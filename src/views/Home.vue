@@ -5,6 +5,7 @@
       <el-aside class="nav_aside">
         <!-- 头像 -->
         <el-tooltip
+          v-if="userInfo_login"
           effect="dark"
           :content="userInfo_login.userName"
           placement="right-end"

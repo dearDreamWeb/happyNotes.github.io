@@ -219,6 +219,17 @@ export default {
       this.users = newVal;
     },
   },
+  /**
+   * 用户已登录，禁止访问该页面
+   */
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      if (vm.$store.getters.getUserInfoLogin) {
+        vm.$message.info("请先退出登录，再进行登录");
+        vm.$router.push("/");
+      }
+    });
+  },
 };
 </script>
 
