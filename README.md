@@ -1,3 +1,9 @@
+# 项目预览
+项目打包部署到了github和码云上。    
+
+[码云版预览地址](https://flyingwxb.gitee.io/happynotes.gitee.io)（国内访问会很快）  
+[github版预览地址](https://deardreamweb.github.io/happyNotes.github.io/)（国内访问可能会有点慢，请耐心等待） 
+
 # 开心笔记
 基于Vue2.x开发的PC端的在线记笔记系统，名为开心笔记。  
 主要使用了Vuex配合LocalStorage来对数据进行储存和获取。 可以对新建笔记和笔记本、删除笔记和笔记本、恢复笔记等功能。
